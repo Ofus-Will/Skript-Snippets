@@ -1,0 +1,36 @@
+# Convert string to text json format
+function JsonText(text: string) :: jsonobject:
+    set {_json::text} to {_text}
+    return json of list variable {_json::*}
+
+# Sends a title [and subtitle] to the player [data: fade in, stay, fade out]
+effect send title %string% [with subtitle %-text%] to %players% [with data %-int%, %-int%, %-int%]:
+    trigger:
+
+        set {_fadeIn} to expression-4 ? 0
+        set {_stay} to expression-5 ? 20
+        set {_fadeOut} to expression-6 ? 0
+
+        # handling the title
+        set {_titlePacket} to new play_server_title packet 
+        set titleaction field of {_titlePacket} to "TITLE"
+        set chat component field 0 of {_titlePacket} to JsonText(expression-1)
+
+        # handling the subtitle 
+        if expression-2 is set:
+            set {_subtitlePacket} to new play_server_title packet 
+            set titleaction field of {_subtitlePacket} to "SUBTITLE"
+            set chat component field 0 of {_subtitlePacket} to JsonText(expression-2)
+
+        # handling the animations
+        set {_timesPacket} to new play_server_title packet 
+        set titleaction field of {_timesPacket} to "TIMES"
+        set int field 0 of {_timesPacket} to {_fadeIn}
+        set int field 1 of {_timesPacket} to {_stay}
+        set int field 2 of {_timesPacket} to {_fadeOut}
+        
+        # send the packets to the specified player(s)
+        loop expressions-3:
+            send packet {_timesPacket} to loop-value
+            send packet {_titlePacket} to loop-value
+            send packet {_subtitlePacket} to loop-value
