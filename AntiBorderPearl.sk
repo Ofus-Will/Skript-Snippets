@@ -1,0 +1,21 @@
+on projectile hit:
+    if "%event-projectile%" = "ender pearl":
+        set {_size} to (world.getWorldBorder().getSize() / 2) - 1
+
+        set {_x} to abs(x-coordinate of event-projectile)
+        set {_z} to abs(z-coordinate of event-projectile)
+
+        if {_x} > {_z}:
+            set {_coordinate} to {_x}
+        else:
+            set {_coordinate} to {_z}
+
+        if {_coordinate} >= {_size}:
+            set metadata "invalid_pearl" of shooter to true 
+
+on teleport:
+    if "%teleport cause%" = "ENDER_PEARL":
+        if (metadata "invalid_pearl" of player) is set:
+            cancel event 
+            send "&cYou can not pearl outside of the world border" 
+            delete metadata "invalid_pearl" of player
