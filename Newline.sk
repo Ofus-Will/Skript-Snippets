@@ -1,0 +1,9 @@
+# new line
+
+import:
+    java.lang.System
+    
+expression new[ ]line:
+    return type: object
+    get:
+        return last character of System.getProperty("line.separator")
