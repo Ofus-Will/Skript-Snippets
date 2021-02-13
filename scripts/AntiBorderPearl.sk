@@ -1,3 +1,5 @@
+# CURRENTLY NOT WORKING DUE TO PEARLS CALLING THE ON TELEPORT EVENT INCONSISTENTLY (INTERNAL ISSUE), LOOK IN TO LATER
+
 on projectile hit:
     if "%event-projectile%" = "ender pearl":
         set {_size} to (world.getWorldBorder().getSize() / 2) - 1
